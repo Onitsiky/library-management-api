@@ -1,0 +1,269 @@
+openapi: '3.0.2'
+info:
+  title: Library management API
+  version: '1.0'
+servers:
+  - url: https://library-management.com
+paths:
+  /ping: 
+    get: 
+      tags:
+        - Health
+      summary: How to check the API's Health
+      responses:
+        200: 
+          description: Pong
+          content:
+            text/plain:
+              schema: 
+                example: Pong
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+  /books/{id}:
+    get: 
+      tags:
+        - Book
+      summary: Get details about the identified Book
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: number
+      responses:
+        200: 
+          description: Details about the identified Book
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Book'
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+    delete: 
+      tags:
+        - Book
+      summary: Remove the specified book from the list
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      responses:
+        200: 
+          description: Book successfully deleted
+          content:
+            text/plain:
+              schema: 
+                example: Book successfully deleted
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+  /books:
+    get: 
+      tags:
+        - Book
+      summary: How to get list of all books
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema: 
+            type: integer
+        - name: pageSize
+          in: query
+          required: false
+          schema: 
+            type: integer
+      responses:
+        200: 
+          description: List of all books
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Book'
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+    put: 
+      tags:
+        - Book
+      summary: Update book
+      description: Update books if id provided, create them otherwise
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              type: array
+              items: 
+                $ref: '#/components/schemas/Book'
+      responses:
+        200: 
+          description: Created or updated books
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                   $ref: '#/components/schemas/Book'
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+  /books/borrow:
+    get: 
+      tags:
+        - Borrow
+      summary: List of borrowed books
+      responses:
+        200: 
+          description: List of borrowed books
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Book'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+    post: 
+      tags:
+        - Borrow
+      summary: Borrow books
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              type: array
+              items: 
+                type: object
+                properties:
+                  clientId:   
+                    type: integer
+                    example: 2
+                  bookId: 
+                    type: integer
+                    example: 2
+      responses:
+        200: 
+          description: books borrowed
+          content:
+            text/plain:
+              example: Books successfully borrowed
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+  /books/return: 
+    get: 
+      tags:
+        - Borrow
+      summary: List of returned books
+      responses:
+        200: 
+          description: List of returned books
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+    post: 
+      tags:
+        - Borrow
+      summary: Return books
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              type: array
+              items: 
+                type: object
+                properties:
+                  clientId:   
+                    type: integer
+                    example: 2
+                  bookId: 
+                    type: integer
+                    example: 2
+      responses:
+        200: 
+          description: books returned
+          content:
+            text/plain:
+              example: Books successfully returned
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+components:
+  schemas:
+    BadRequest:
+      description: Bad request exception
+      type: object
+      properties:
+        type:
+          type: string
+          example: BadRequestException
+        message:
+          type: string
+          example: Bad request
+    Book:
+      description: Description of a Book
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        title: 
+          type: string
+          example: Javascript basics
+        resume: 
+          type: string
+          example: This book will teach you Javascript
+        author: 
+          type: string
+          example: Unknown
+        collection: 
+          type: string
+          example: Beginners tutorial
+        page: 
+          type: integer
+          example: 70
+        available: 
+          type: boolean
+        borrowNumber: 
+          type: integer
+          example: 00
