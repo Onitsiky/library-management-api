@@ -21,6 +21,7 @@
   "homepage": "https://github.com/Noums26/library-management-api#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "pg": "^8.8.0"
   },
