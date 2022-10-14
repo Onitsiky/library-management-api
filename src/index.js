@@ -9,11 +9,13 @@ app.use(json());
 app.use(cors());
 
 //Routes
-app.get('/tic', (err, res) => {
+app.get('/tic', (req, res) => {
     //If the internet is slow
     setTimeout(() => res.send('tac'),750);
 });
 
+// Books
+app.get('/books', getAllBooks)
 
 //Connectivity
 const port = process.env.PORT || 8080;
