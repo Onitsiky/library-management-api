@@ -13,6 +13,7 @@ const { Client } = pg;
  * Connect to the database with client.connect()
  * 
  * And make your query like this:
+ * client.connect();
  * client.query('the query', (err, res) => {
  *      console.log(res.rows);
  * })
