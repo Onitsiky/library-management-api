@@ -1,6 +1,6 @@
 import express, {json} from 'express';
 import cors from 'cors';
-import { getAllBooks } from './route/books';
+import books from './route/books';
 
 const app = express();
 
@@ -15,7 +15,8 @@ app.get('/tic', (req, res) => {
 });
 
 // Books
-app.get('/books', getAllBooks)
+app.get('/books', books.getAll)
+app.get('/books/{id}', books.getById)
 
 //Connectivity
 const port = process.env.PORT || 8080;
