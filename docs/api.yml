@@ -78,12 +78,12 @@ paths:
       parameters:
         - name: page
           in: query
-          required: false
+          required: true
           schema: 
             type: integer
         - name: pageSize
           in: query
-          required: false
+          required: true
           schema: 
             type: integer
       responses:
@@ -128,107 +128,110 @@ paths:
             application/json:
               schema:   
                 $ref: '#/components/schemas/BadRequest'
-  /books/borrow:
-    get: 
+  /users/{id}:
+    get:
       tags:
-        - Borrow
-      summary: List of borrowed books
+        - Users
+      summary: How to get details about an user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: number
       responses:
         200: 
-          description: List of borrowed books
+          description: Details about the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+    delete: 
+      tags:
+        - Users
+      summary: How to delete specific user
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: 
+            type: number
+      responses:
+        200:
+          description: User deleted
+          content:
+            text/plain:
+              example: User deleted successfully
+        400: 
+          description: Bad request
+          content:
+            application/json:
+              schema:   
+                $ref: '#/components/schemas/BadRequest'
+  /users:
+    get: 
+      tags:
+        - Users
+      summary: How to get list of all Users
+      parameters:
+        - name: page
+          in: query
+          required: true
+          schema: 
+            type: integer
+        - name: pageSize
+          in: query
+          required: true
+          schema: 
+            type: integer
+      responses:
+        200: 
+          description: List of all Users
           content:
             application/json:
               schema: 
                 type: array
                 items: 
-                  $ref: '#/components/schemas/Book'
-        400:
+                  $ref: '#/components/schemas/User'
+        400: 
           description: Bad request
           content:
             application/json:
               schema:   
                 $ref: '#/components/schemas/BadRequest'
-    post: 
+    put: 
       tags:
-        - Borrow
-      summary: Borrow books
+        - Users
+      summary: Update user if id provided, create them otherwise
       requestBody: 
         content:
           application/json:
             schema: 
               type: array
               items: 
-                type: object
-                properties:
-                  clientId:   
-                    type: integer
-                    example: 2
-                  bookId: 
-                    type: integer
-                    example: 2
+                $ref: '#/components/schemas/User'
       responses:
         200: 
-          description: books borrowed
-          content:
-            text/plain:
-              example: Books successfully borrowed
-        400:
-          description: Bad request
-          content:
-            application/json:
-              schema:   
-                $ref: '#/components/schemas/BadRequest'
-  /books/return: 
-    get: 
-      tags:
-        - Borrow
-      summary: List of returned books
-      responses:
-        200: 
-          description: List of returned books
+          description: updated or Created Users
           content:
             application/json:
               schema: 
                 type: array
-                items:
-                  $ref: '#/components/schemas/Book'
-        400:
+                items: 
+                  $ref: '#/components/schemas/User'
+        400: 
           description: Bad request
           content:
             application/json:
               schema:   
                 $ref: '#/components/schemas/BadRequest'
-    post: 
-      tags:
-        - Borrow
-      summary: Return books
-      requestBody: 
-        content:
-          application/json:
-            schema: 
-              type: array
-              items: 
-                type: object
-                properties:
-                  clientId:   
-                    type: integer
-                    example: 2
-                  bookId: 
-                    type: integer
-                    example: 2
-      responses:
-        200: 
-          description: books returned
-          content:
-            text/plain:
-              example: Books successfully returned
-        400:
-          description: Bad request
-          content:
-            application/json:
-              schema:   
-                $ref: '#/components/schemas/BadRequest'
-components:
+components: 
   schemas:
     BadRequest:
       description: Bad request exception
@@ -256,7 +259,7 @@ components:
         author: 
           type: string
           example: Unknown
-        collection: 
+        category: 
           type: string
           example: Beginners tutorial
         page: 
@@ -264,6 +267,28 @@ components:
           example: 70
         available: 
           type: boolean
-        borrowNumber: 
+    User: 
+      description: Description of an user
+      type: object
+      properties:
+        id: 
           type: integer
-          example: 00
+          example: 1
+        name:
+          type: string
+          example: hacktoberfest
+        phoneNumber:
+          type: string
+          example: +261 32*******
+        email: 
+          type: string 
+          example: hacktoberfest@*****.com
+        userName:
+          type: string 
+          example: Unknown
+        Password:
+          type: string
+          example: "*********"
+        Role: 
+          type: string 
+          example: Manager
