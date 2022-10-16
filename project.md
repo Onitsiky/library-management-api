@@ -1,6 +1,6 @@
 # Library Management API
 
-![Databae model](./docs/Library.png)
+![Databae model](./docs/Library_v01.png)
 
 For this project, we start from this model.
 

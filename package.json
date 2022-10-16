@@ -7,7 +7,8 @@
   "scripts": {
     "prettier:check": "prettier --check \"src/**/*.{js,ts,tsx}\" \"./**/*.{json,yml,yaml}\"",
     "prettier:fix": "prettier --write \"src/**/*.{js,ts,tsx}\" \"./**/*.{json,yml,yaml}\"",
-    "start": "node ./src/index.js"
+    "start": "node ./src/index.js",
+    "local": "nodemon ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
     "pg": "^8.8.0"
   },
   "devDependencies": {
+    "nodemon": "^2.0.20",
     "prettier": "^2.7.1"
   }
 }
