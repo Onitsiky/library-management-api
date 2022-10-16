@@ -1,30 +1,91 @@
-openapi: '3.0.2'
+openapi: '3.0.3'
 info:
   title: Library management API
   version: '1.0'
 servers:
   - url: https://library-management.com
+security:
+  - BearerAuth: []
 paths:
-  /ping: 
-    get: 
+  /ping:
+    get:
       tags:
-        - Health
+        - Security
       summary: How to check the API's Health
       responses:
-        200: 
+        200:
           description: Pong
           content:
             text/plain:
-              schema: 
+              schema:
                 example: Pong
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
-              schema:   
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+  /authorize:
+    put:
+      tags:
+        - Security
+      summary: Update user if id provided, create it otherwise
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        200:
+          description: The Created or Updated user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequest'
+    post:
+      tags:
+        - Security
+      summary: How to get authentication token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: hacktoberfest
+                password:
+                  type: string
+                  example: "*******"
+      responses:
+        200:
+          description: The authentication token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiJ9"
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
                 $ref: '#/components/schemas/BadRequest'
   /books/{id}:
-    get: 
+    get:
       tags:
         - Book
       summary: Get details about the identified Book
@@ -32,22 +93,22 @@ paths:
         - name: id
           in: path
           required: true
-          schema: 
+          schema:
             type: number
       responses:
-        200: 
+        200:
           description: Details about the identified Book
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Book'
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
-              schema:   
+              schema:
                 $ref: '#/components/schemas/BadRequest'
-    delete: 
+    delete:
       tags:
         - Book
       summary: Remove the specified book from the list
@@ -55,23 +116,23 @@ paths:
         - name: id
           in: path
           required: true
-          schema: 
+          schema:
             type: integer
       responses:
-        200: 
+        200:
           description: Book successfully deleted
           content:
             text/plain:
-              schema: 
+              schema:
                 example: Book successfully deleted
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
-              schema:   
+              schema:
                 $ref: '#/components/schemas/BadRequest'
   /books:
-    get: 
+    get:
       tags:
         - Book
       summary: How to get list of all books
@@ -79,54 +140,54 @@ paths:
         - name: page
           in: query
           required: true
-          schema: 
+          schema:
             type: integer
         - name: pageSize
           in: query
           required: true
-          schema: 
+          schema:
             type: integer
       responses:
-        200: 
+        200:
           description: List of all books
           content:
             application/json:
-              schema: 
+              schema:
                 type: array
-                items: 
+                items:
                   $ref: '#/components/schemas/Book'
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
-              schema:   
+              schema:
                 $ref: '#/components/schemas/BadRequest'
-    put: 
+    put:
       tags:
         - Book
       summary: Update book
       description: Update books if id provided, create them otherwise
-      requestBody: 
+      requestBody:
         content:
           application/json:
-            schema: 
+            schema:
               type: array
-              items: 
+              items:
                 $ref: '#/components/schemas/Book'
       responses:
-        200: 
+        200:
           description: Created or updated books
           content:
             application/json:
-              schema: 
+              schema:
                 type: array
-                items: 
-                   $ref: '#/components/schemas/Book'
-        400: 
+                items:
+                  $ref: '#/components/schemas/Book'
+        400:
           description: Bad request
           content:
             application/json:
-              schema:   
+              schema:
                 $ref: '#/components/schemas/BadRequest'
   /users/{id}:
     get:
@@ -137,22 +198,22 @@ paths:
         - name: id
           in: path
           required: true
-          schema: 
+          schema:
             type: number
       responses:
-        200: 
+        200:
           description: Details about the specified user
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
-              schema:   
+              schema:
                 $ref: '#/components/schemas/BadRequest'
-    delete: 
+    delete:
       tags:
         - Users
       summary: How to delete specific user
@@ -160,7 +221,7 @@ paths:
         - name: id
           in: path
           required: true
-          schema: 
+          schema:
             type: number
       responses:
         200:
@@ -168,14 +229,14 @@ paths:
           content:
             text/plain:
               example: User deleted successfully
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
-              schema:   
+              schema:
                 $ref: '#/components/schemas/BadRequest'
   /users:
-    get: 
+    get:
       tags:
         - Users
       summary: How to get list of all Users
@@ -183,55 +244,29 @@ paths:
         - name: page
           in: query
           required: true
-          schema: 
+          schema:
             type: integer
         - name: pageSize
           in: query
           required: true
-          schema: 
+          schema:
             type: integer
       responses:
-        200: 
+        200:
           description: List of all Users
           content:
             application/json:
-              schema: 
+              schema:
                 type: array
-                items: 
+                items:
                   $ref: '#/components/schemas/User'
-        400: 
+        400:
           description: Bad request
           content:
             application/json:
-              schema:   
+              schema:
                 $ref: '#/components/schemas/BadRequest'
-    put: 
-      tags:
-        - Users
-      summary: Update user if id provided, create them otherwise
-      requestBody: 
-        content:
-          application/json:
-            schema: 
-              type: array
-              items: 
-                $ref: '#/components/schemas/User'
-      responses:
-        200: 
-          description: updated or Created Users
-          content:
-            application/json:
-              schema: 
-                type: array
-                items: 
-                  $ref: '#/components/schemas/User'
-        400: 
-          description: Bad request
-          content:
-            application/json:
-              schema:   
-                $ref: '#/components/schemas/BadRequest'
-components: 
+components:
   schemas:
     BadRequest:
       description: Bad request exception
@@ -250,28 +285,28 @@ components:
         id:
           type: integer
           example: 2
-        title: 
+        title:
           type: string
           example: Javascript basics
-        resume: 
+        resume:
           type: string
           example: This book will teach you Javascript
-        author: 
+        author:
           type: string
           example: Unknown
-        category: 
+        category:
           type: string
           example: Beginners tutorial
-        page: 
+        page:
           type: integer
           example: 70
-        available: 
+        available:
           type: boolean
-    User: 
+    User:
       description: Description of an user
       type: object
       properties:
-        id: 
+        id:
           type: integer
           example: 1
         name:
@@ -280,15 +315,15 @@ components:
         phoneNumber:
           type: string
           example: +261 32*******
-        email: 
-          type: string 
+        email:
+          type: string
           example: hacktoberfest@*****.com
         userName:
-          type: string 
+          type: string
           example: Unknown
         Password:
           type: string
           example: "*********"
-        Role: 
-          type: string 
-          example: Manager
+        Role:
+          type: string
+          example: ADMIN
